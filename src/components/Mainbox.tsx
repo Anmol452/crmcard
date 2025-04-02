@@ -1,10 +1,11 @@
-import React, { HtmlHTMLAttributes, useState , useEffect} from 'react';
+import React, { HtmlHTMLAttributes, useState, useEffect } from 'react';
 // import { FcDocument } from "react-icons/fc";
-import { FcRules, FcExpand, FcNext , FcPrevious} from "react-icons/fc"
+import { FcRules, FcExpand, FcNext, FcPrevious } from "react-icons/fc"
 import Mainheader from './mainheader';
 import Card from './Card';
 import axios from "axios";
 import Module from './Module';
+import Dropara from './dropara';
 // import { DragDropContext } from 'react-beautiful-dnd';
 
 
@@ -27,6 +28,7 @@ interface Task {
 
 const Mainbox = () => {
 
+
   const TODO = 'TODO'
   const INPROGRESS = 'INPROGRESS'
   const REVIEW = 'REVIEW'
@@ -42,12 +44,14 @@ const Mainbox = () => {
   const REVIEW2 = 'REVIEW2'
   const DONE2 = 'DONE2'
 
-const [facthdata1, setFacthdata1] = useState<string>('');
+  const [facthdata1, setFacthdata1] = useState<string>('');
 
   const [tasks, setTasks] = useState<Task[]>([]);
   const [value, setValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [dragTask, setDragTask] = useState<Task | null>(null);
+  const [acctivecard, setAcctivecard] = useState<Task | null>(null);
+
 
 
   const [heightcon1, setHeightcon1] = useState<string>('10v');
@@ -68,21 +72,28 @@ const [facthdata1, setFacthdata1] = useState<string>('');
   const [nmark2, setNmark2] = useState<JSX.Element>(<FcPrevious />);
 
   const [moduleshow, setModuleshow] = useState<string>('none');
+  const [blur, setBlur] = useState<string>('blur(0rem)');
   const [modueldata, setModueldata] = useState<string>('');
-  
-  
- 
-  
+
+  const [disflxl, setDisflxl] = useState<string>('flex');
+  const [disflxl1, setDisflxl1] = useState<string>('flex');
+  const [disflxl2, setDisflxl2] = useState<string>('flex');
+
+
+
+
 
   const val1 = () => {
     if (heightcon1 == '40vh') {
       setHeightcon1('5vh')
       setDownchan1(<FcExpand />)
       setShowcard('none')
+      setDisflxl('none')
     } else {
       setHeightcon1('40vh')
       setDownchan1(<FcNext />)
       setShowcard('flex')
+      setDisflxl('flex')
     }
   }
 
@@ -93,11 +104,13 @@ const [facthdata1, setFacthdata1] = useState<string>('');
       setHeightcon2('5vh')
       setDownchan2(<FcExpand />)
       setShowcard2('none')
+      setDisflxl1('none')
 
     } else {
       setHeightcon2('40vh')
       setShowcard2('flex')
       setDownchan2(<FcNext />)
+      setDisflxl1('flex')
     }
 
   }
@@ -109,10 +122,12 @@ const [facthdata1, setFacthdata1] = useState<string>('');
       setHeightcon3('5vh')
       setShowcard3('none')
       setDownchan3(<FcExpand />)
+      setDisflxl2('none')
     } else {
       setHeightcon3('40vh')
       setShowcard3('flex')
       setDownchan3(<FcNext />)
+      setDisflxl2('flex')
     }
   }
 
@@ -120,11 +135,12 @@ const [facthdata1, setFacthdata1] = useState<string>('');
 
 
   const BoxStyle: Record<string, string> = {
-    background: "#fff",  // Fixed the typo
+    // background: "#fff",  // Fixed the typo
     height: "80vh",
     width: "100vw",
     position: "relative",
-    boxShadow: "0px 0px 5px 0px #000"
+    boxShadow: "0px 0px 5px 0px #000",
+    filter: blur
     // boxSize: 
   };
 
@@ -147,6 +163,7 @@ const [facthdata1, setFacthdata1] = useState<string>('');
   const Main: Record<string, string> = {
     height: "10vh",
     width: "97vw",
+    //  filter: 'blur(1.5rem)'
     // border: "solid red 1px"
   }
 
@@ -192,7 +209,7 @@ const [facthdata1, setFacthdata1] = useState<string>('');
 
   }
 
-  
+
 
   const show2: Record<string, string> = {
     // display: showcard2,
@@ -207,14 +224,14 @@ const [facthdata1, setFacthdata1] = useState<string>('');
     width: '25%',
     flexDirection: 'column'
   }
-  
+
   const show4: Record<string, string> = {
     // display: showcard2,
     width: '25%',
   }
 
 
-  
+
   const module: React.CSSProperties = {
     zIndex: 6,
     position: "fixed",
@@ -225,18 +242,18 @@ const [facthdata1, setFacthdata1] = useState<string>('');
     marginTop: "2vh",
     display: moduleshow,
     borderRadius: '11px',
-    boxShadow: '0 0 5px 2px #000 , 0 6px 2px 209px rgba(255, 255, 255, 0.5)' 
+    boxShadow: '0 0 5px 2px #000 '
 
   };
 
 
-  const btnStyle:Record<string, string> = {
+  const btnStyle: Record<string, string> = {
     background: '#00000069',
     color: 'black',
     height: '6vh',
     fontSize: '0.8rem'
-};
-  
+  };
+
 
   //----------------------_---------d&D------0000------------------------------------
 
@@ -260,7 +277,7 @@ const [facthdata1, setFacthdata1] = useState<string>('');
 
 
 
- 
+
 
 
 
@@ -272,55 +289,53 @@ const [facthdata1, setFacthdata1] = useState<string>('');
 
 
 
-  
-
- 
 
 
-const handelOnDrag = (e: DragEvent): void => {
-    const target = e.target as HTMLElement // Ensuring proper typing
-    const status = target.getAttribute('data-status');
-   
 
-    // let lengthCard2 = document.getElementById('lengthCard2')
-    let co1 = 1 
-    let co2 = 2
-    let co3 = 3
-    console.log('Dropping:', status);
-    
- // console.log(lengthCard?.childNodes.length)
-    if (status === "TODO") {
-      handleDragNDrop("TODO");
-    } else if (status === "INPROGRESS") {
-      handleDragNDrop("INPROGRESS");
-    } else if (status === "REVIEW") {
-      handleDragNDrop("REVIEW");
-    } else if (status === "DONE") {
-      handleDragNDrop("DONE");
-    } else if (status === "TODO1") {
-      handleDragNDrop("TODO1");
-    } else if (status === "INPROGRESS1") {
-      handleDragNDrop("INPROGRESS1");
-    } else if (status === "REVIEW1") {
-      handleDragNDrop("REVIEW1");
-    } else if (status === "DONE1") {
-      handleDragNDrop("DONE1");
-    }else if (status === "TODO2") {
-      handleDragNDrop("TODO2");
-    } else if (status === "INPROGRESS2") {
-      handleDragNDrop("INPROGRESS2");
-    } else if (status === "REVIEW2") {
-      handleDragNDrop("REVIEW2");
-    } else if (status === "DONE2") {
-      handleDragNDrop("DONE2");
-    }
-};
+
+
+  // const handelOnDrag = (e: DragEvent, index: DragEvent): void => {
+  //     const target = e.target as HTMLElement // Ensuring proper typing
+  //     const status = target.getAttribute('data-status');
+
+
+  //     // let lengthCard2 = document.getElementById('lengthCard2')
+
+  //     console.log('Dropping:', status , 'postion: ' , index);
+
+  //  // console.log(lengthCard?.childNodes.length)
+  //      if (status === "TODO") {
+  //       handleDragNDrop("TODO");
+  //     } else if (status === "INPROGRESS") {
+  //       handleDragNDrop("INPROGRESS");
+  //     } else if (status === "REVIEW") {
+  //       handleDragNDrop("REVIEW");
+  //     } else if (status === "DONE") {
+  //       handleDragNDrop("DONE");
+  //     } else if (status === "TODO1") {
+  //       handleDragNDrop("TODO1");
+  //     } else if (status === "INPROGRESS1") {
+  //       handleDragNDrop("INPROGRESS1");
+  //     } else if (status === "REVIEW1") {
+  //       handleDragNDrop("REVIEW1");
+  //     } else if (status === "DONE1") {
+  //       handleDragNDrop("DONE1");
+  //     }else if (status === "TODO2") {
+  //       handleDragNDrop("TODO2");
+  //     } else if (status === "INPROGRESS2") {
+  //       handleDragNDrop("INPROGRESS2");
+  //     } else if (status === "REVIEW2") {
+  //       handleDragNDrop("REVIEW2");
+  //     } else if (status === "DONE2") {
+  //       handleDragNDrop("DONE2");
+  //     }
+  // };
 
   // console.log('ok');
-  
+
 
   const onDragOver = (e: DragEvent): void => {
-    e.preventDefault(); 
+    e.preventDefault();
   };
 
 
@@ -331,169 +346,195 @@ const handelOnDrag = (e: DragEvent): void => {
   let box1: HTMLElement | null = document.getElementById('box1');
   let mark1: HTMLElement | null = document.getElementById('mark1');
 
-  const swipe =() =>{
+  const swipe = () => {
 
-//    console.log("ok");
-   if(box1.style.width === "18vw"){
+    //    console.log("ok");
+    if (box1.style.width === "18vw") {
       box1.style.width = "60vw";
       mark1.style.left = '15vw'
       setShowcard('flex')
       setMark(<FcPrevious />)
-    }else{
-        box1.style.width = "18vw";
-        mark1.style.left = '1vw'
-       setShowcard('none')
+    } else {
+      box1.style.width = "18vw";
+      mark1.style.left = '1vw'
+      setShowcard('none')
       setNmark(<FcNext />)
 
-    }     
-}
-
-
-let box2: HTMLElement | null = document.getElementById('box2');
-let mark2: HTMLElement | null = document.getElementById('mark2');
-  const swipe2 =() =>{  
-//    console.log("ok");
- if(box2.style.width === "15vw"){
-    box2.style.width = "60vw";
-    mark2.style.left = '15vw'
-    setShowcard('flex')
-    setMark2(<FcPrevious />)
-  }else{
-      box2.style.width = "18vw";
-      mark2.style.left = '1vw'
-     setShowcard('none')
-     setNmark2(<FcNext />)
-  }     
-}
-
-
-let box3: HTMLElement | null = document.getElementById('box3');
-let mark3: HTMLElement | null = document.getElementById('mark3');
-const swipe3 =() =>{
- if(box3.style.width === "18vw"){
-    box3.style.width = "60vw";
-    mark3.style.left = '15vw'
-    setShowcard('block')
-  }else{
-      box3.style.width = "18vw";
-      mark3.style.left = '1vw'
-     setShowcard('none')
-  }     
-}
-
-
-let box4: HTMLElement | null = document.getElementById('box4');
-let mark4: HTMLElement | null = document.getElementById('mark4');
-const swipe4 =() =>{
- 
-
- if(box4.style.width === "18vw"){
-    box4.style.width = "60vw";
-    mark4.style.left = '15vw'
-    setShowcard('block')
-  }else{
-      box4.style.width = "18vw";
-      mark4.style.left = '1vw'
-     setShowcard('none')
-  }     
-}
-
-// ______________________________________________________________________________
-
-
-// const onloaddata = async () => {
-//   await axios.get(")
-//   .then(res=>{
-//     setFacthdata1(res.data)
-//   }).catch((error:Error) => {console.log(error)})
-// }
-
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const response = await axios.get<Task[]>("http://localhost:3000");
-      setTasks(response.data);
-    } catch (err) {
-      console.log("Failed to fetch data");
-    } finally {
-      setLoading(false);
     }
-  };
-
-  fetchData();
-}, []); // Runs only on mount
-
-// Log state changes
-useEffect(() => {
-  console.log("Updated tasks:", tasks);
-}, [tasks]);
-
-
-
-
-
-// Handle input change
-const handelchang = (e: React.ChangeEvent<HTMLInputElement>) => {
-  setValue(e.target.value);
-
-  // Example: Add a new task dynamically on input change (if needed)
-  setTasks((prev) => [
-    ...prev,
-    { card_id: prev.length + 1, card_staus: "new", title: e.target.value },
-  ]);
-};
-
-
-
-
-// Handle drag and drop
-const handleDragNDrop = async (status: Task["card_staus"]) => {
-  if (!dragTask) return; // Ensure dragTask is not null before proceeding
-
-setTasks((prevTasks) =>
-    prevTasks.map((item) =>
-      item.card_id === dragTask.card_id ? { ...item, card_staus: status } : item ,     
-    )
-  );
-
-
-  try {
-    // Send update request to the backend
-    await axios.put(`http://localhost:3000`, {
-      card_id: dragTask.card_id,
-      status: status,
-    });
-
-    // console.log(`Task ${dragTask.card_id} updated successfully`);
-  } catch (error) {
-    console.error("Failed to update task status", error);
   }
 
 
-  setDragTask(null); // Reset the dragged task
-};
+  let box2: HTMLElement | null = document.getElementById('box2');
+  let mark2: HTMLElement | null = document.getElementById('mark2');
+  const swipe2 = () => {
+    //    console.log("ok");
+    if (box2.style.width === "15vw") {
+      box2.style.width = "60vw";
+      mark2.style.left = '15vw'
+      setShowcard('flex')
+      setMark2(<FcPrevious />)
+    } else {
+      box2.style.width = "18vw";
+      mark2.style.left = '1vw'
+      setShowcard('none')
+      setNmark2(<FcNext />)
+    }
+  }
+
+
+  let box3: HTMLElement | null = document.getElementById('box3');
+  let mark3: HTMLElement | null = document.getElementById('mark3');
+  const swipe3 = () => {
+    if (box3.style.width === "18vw") {
+      box3.style.width = "60vw";
+      mark3.style.left = '15vw'
+      setShowcard('block')
+    } else {
+      box3.style.width = "18vw";
+      mark3.style.left = '1vw'
+      setShowcard('none')
+    }
+  }
+
+
+  let box4: HTMLElement | null = document.getElementById('box4');
+  let mark4: HTMLElement | null = document.getElementById('mark4');
+  const swipe4 = () => {
+
+
+    if (box4.style.width === "18vw") {
+      box4.style.width = "60vw";
+      mark4.style.left = '15vw'
+      setShowcard('block')
+    } else {
+      box4.style.width = "18vw";
+      mark4.style.left = '1vw'
+      setShowcard('none')
+    }
+  }
+
+  // ______________________________________________________________________________
+
+
+  // const onloaddata = async () => {
+  //   await axios.get(")
+  //   .then(res=>{
+  //     setFacthdata1(res.data)
+  //   }).catch((error:Error) => {console.log(error)})
+  // }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<Task[]>("http://localhost:3000");
+        setTasks(response.data);
+      } catch (err) {
+        console.log("Failed to fetch data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []); // Runs only on mount
+
+  // Log state changes
+  useEffect(() => {
+    console.log("Updated tasks:", tasks);
+  }, [tasks]);
 
 
 
-if (loading) return <p>Loading...</p>;
 
 
-const handelclic = (task : Task) =>{
-  // modueldata , moduleshow 
-  // task)
-  setModuleshow('block')
+  // Handle input change
+  const handelchang = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
 
-  return setModueldata(<Module moduletitle={task.card_title} moduledesc={task.card_desc} closebtn={closebtn} />)
-}
+    // Example: Add a new task dynamically on input change (if needed)
+    setTasks((prev) => [
+      ...prev,
+      { card_id: prev.length + 1, card_staus: "new", title: e.target.value },
+    ]);
+  };
 
-const closebtn = ()=>{
-  setModuleshow('none')
-}
 
-// console.log(setModueldata.card_title);
-// console.log(setModueldata.card_desc);
 
-// const showbtn = () =>{}
+
+  // Handle drag and drop
+  const handleDragNDrop = async (status: Task["card_staus"]) => {
+    if (!dragTask) return; // Ensure dragTask is not null before proceeding
+
+    setTasks((prevTasks) =>
+      prevTasks.map((item) =>
+        item.card_id === dragTask.card_id ? { ...item, card_staus: status } : item,
+      )
+    );
+
+
+    try {
+      // Send update request to the backend
+      await axios.put(`http://localhost:3000`, {
+        card_id: dragTask.card_id,
+        status: status,
+      });
+
+      // console.log(`Task ${dragTask.card_id} updated successfully`);
+    } catch (error) {
+      console.error("Failed to update task status", error);
+    }
+
+
+    setDragTask(null); // Reset the dragged task
+  };
+
+
+
+  if (loading) return <p>Loading...</p>;
+
+
+  const handelclic = (task: Task) => {
+    // modueldata , moduleshow 
+    // task)
+    setModuleshow('block')
+    setBlur('blur(0.3rem)')
+    return setModueldata(<Module moduletitle={task.card_title} moduledesc={task.card_desc} closebtn={closebtn} />)
+  }
+
+  const closebtn = () => {
+    setModuleshow('none')
+    setBlur('blur(0rem)')
+  }
+
+  // console.log(setModueldata.card_title);
+  // console.log(setModueldata.card_desc);
+
+  // const showbtn = () =>{}
+
+
+
+  const onDrop = (status: DragEvent, position: DragEvent): void => {
+    // const target = e.target as HTMLElement // Ensuring proper typing
+    // const status = target.getAttribute('data-status');
+    console.log(`this is a status : ${status} index : ${position}`);
+
+    if (acctivecard == null || acctivecard == undefined) return;
+
+    const tackTOMove = tasks[acctivecard];
+    const updateTask = tasks.filter((task, index) => index !== acctivecard)
+    console.log();
+
+
+    updateTask.splice(position, 0, {
+      ...tackTOMove,
+      // task.card_status: status
+    }
+    )
+    handleDragNDrop(status)
+
+
+  }
+
 
 
   //----------------------_---------------0000------------------------------------
@@ -501,14 +542,15 @@ const closebtn = ()=>{
   return (
     <>
 
-      <div className="box" style={BoxStyle}  onChange={handelchang}>
+      <span className="modulshow" style={module}> {modueldata} </span>
+      <div className="box" style={BoxStyle} onChange={handelchang}>
+        {/* <div className="blur" style={{height:'100vh', width:'100vw', filter: 'blur(1.5rem)'}}></div> */}
         <div className="mainbox" style={MainBox}>
-          <Mainheader swipe={swipe} swipe2={swipe2} swipe3={swipe3} swipe4={swipe4} np={nmark} np2={nmark2}/>
+          <Mainheader swipe={swipe} swipe2={swipe2} swipe3={swipe3} swipe4={swipe4} np={nmark} np2={nmark2} />
+          {/* <h6 style={{color: "#000     "}}>acctiv  - : {acctivecard}</h6> */}
 
-      
           <div className="main" style={Main}>
 
-            <span className="modulshow" style={module}> {modueldata} </span>
 
             <div className="lare1" style={lare1} >
               <span onClick={val1} style={{
@@ -519,55 +561,77 @@ const closebtn = ()=>{
               {/* drag and drop */}
 
               <div style={{
-                display: 'flex'
+                display: disflxl
               }}>
 
                 {/* //------------------------------------------------------------------------------------ */}
 
-                <div className="todo" data-status={TODO} onDrop={handelOnDrag} onDragOver={onDragOver} style={show} id="lengthCard1">
+                <div className="todo" data-status={TODO} onDragOver={onDragOver} style={show} id="lengthCard1">
+                  <Dropara onDrop={() => onDrop(TODO, 0)} />
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.card_staus === TODO && <div className="task-item"  key={task.card_id} onDrag={(e) => handleDrag(e, task)} onClick={(e)=> handelclic(task)} draggable > <Card title={task.card_title.slice(0,15)} desc={task.card_desc.slice(0,20)} col={'red'} />
-                      </div>
-                    
-                  ))
-                }
-                
-               
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === TODO &&
+                      <React.Fragment key={task.card_id || index}>
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'red'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(TODO, index + 1)} />
+
+                      </React.Fragment>
+                    ))
+                  }
+
+
+
                 </div>
 
 
-                <div className="todo" data-status={INPROGRESS} onDrop={handelOnDrag} onDragOver={onDragOver} style={show2} id="lengthCard2">
-                  
-                {
-                    tasks.length > 0 && tasks.map((task) => ( 
-                      task.card_staus === INPROGRESS && <div className="task-item"  key={task.card_id} onDrag={(e) => handleDrag(e, task)} onClick={(e)=> handelclic(task)} draggable > <Card title={task.card_title.slice(0,15)} desc={task.card_desc.slice(0,20)} col={'rgb(156 39 176)'}/>
-                      </div>
-                  ))
-                }
+                <div className="todo" data-status={INPROGRESS} onDragOver={onDragOver} style={show2} id="lengthCard2">
+
+                  <Dropara onDrop={() => onDrop(INPROGRESS, 0)} />
+                  {
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === INPROGRESS &&
+                      <React.Fragment key={task.card_id || index}>
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(156 39 176)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(INPROGRESS, index + 1)} />
+                      </React.Fragment>
+                    ))
+                  }
                 </div>
 
 
-                <div className="todo" data-status={REVIEW} onDrop={handelOnDrag} onDragOver={onDragOver} style={show3} id="lengthCard3">
-               
+                <div className="todo" data-status={REVIEW} onDragOver={onDragOver} style={show3} id="lengthCard3">
 
-                {
-                    tasks.length > 0 && tasks.map((task) => (  
-                      task.card_staus === REVIEW && <div className="task-item"  key={task.card_id} onDrag={(e) => handleDrag(e, task)} onClick={(e)=> handelclic(task)} draggable > <Card title={task.card_title.slice(0,15)} desc={task.card_desc.slice(0,20)} col={'rgb(255 111 0)'} />
-                      </div>
-                  ))
-                }
+
+                  <Dropara onDrop={() => onDrop(REVIEW, 0)} />
+                  {
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === REVIEW &&
+                      <React.Fragment key={task.card_id || index}>
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(255 111 0)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(REVIEW, task.card_id + 1)} />
+                      </React.Fragment>
+                    ))
+                  }
                 </div>
 
 
-                <div className="todo" data-status={DONE} onDrop={handelOnDrag} onDragOver={onDragOver} style={show3} id="lengthCard4">
+                <div className="todo" data-status={DONE} onDragOver={onDragOver} style={show3} id="lengthCard4">
 
-                {
-                    tasks.length > 0 && tasks.map((task) => ( 
-                      task.card_staus === DONE && <div className="task-item"  key={task.card_id} onDrag={(e) => handleDrag(e, task)} onClick={(e)=> handelclic(task)} draggable > <Card title={task.card_title.slice(0,15)} desc={task.card_desc.slice(0,20)} col={'green'} />
-                      </div>
-                  ))
-                }
+                  <Dropara onDrop={() => onDrop(DONE, 0)} />
+                  {
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === DONE &&
+                      <React.Fragment key={task.card_id || index}>
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'green'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(DONE, index + 1)} />
+
+                      </React.Fragment>
+                    ))
+                  }
                 </div>
 
               </div>
@@ -590,46 +654,79 @@ const closebtn = ()=>{
 
 
               <div style={{
-                display: 'flex'
+                display: disflxl1
+
               }}>
 
                 {/* //------------------------------------------------------------------------------------ */}
 
-                <div className="todo" data-status={TODO1} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={TODO1} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(TODO1, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === TODO1 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === TODO1 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'red'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(TODO1, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={INPROGRESS1} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={INPROGRESS1} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(INPROGRESS1, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === INPROGRESS1 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === INPROGRESS1 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(156 39 176)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(INPROGRESS1, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={REVIEW1} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={REVIEW1} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(REVIEW1, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === REVIEW1 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === REVIEW1 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(255 111 0)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(REVIEW1, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={DONE1} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={DONE1} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(DONE1, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === DONE1 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === DONE1 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'green'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(DONE1, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
@@ -653,46 +750,78 @@ const closebtn = ()=>{
 
 
               <div style={{
-                display: 'flex'
+                display: disflxl2
               }}>
 
                 {/* //------------------------------------------------------------------------------------ */}
 
-                <div className="todo" data-status={TODO2} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={TODO2} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(TODO2, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === TODO2 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === TODO2 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'red'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(TODO2, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={INPROGRESS2} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={INPROGRESS2} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(INPROGRESS2, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === INPROGRESS2 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === INPROGRESS2 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(156 39 176)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(INPROGRESS2, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={REVIEW2} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={REVIEW2} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(REVIEW2, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === REVIEW2 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === REVIEW2 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(255 111 0)'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(REVIEW2, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
 
 
-                <div className="todo" data-status={DONE2} onDrop={handelOnDrag} onDragOver={onDragOver} style={show}>
+                <div className="todo" data-status={DONE2} onDragOver={onDragOver} style={show}>
+                  <Dropara onDrop={() => onDrop(DONE2, 0)} />
+
                   {
-                    tasks.length > 0 && tasks.map((task) => (
-                      task.status === DONE2 && <div className="task-item" key={task.id} onDrag={(e) => handleDrag(e, task)} draggable > <Card title={task.title} />
-                      </div>
+                    tasks.length > 0 && tasks.map((task, index) => (
+                      task.card_staus === DONE2 &&
+                      <React.Fragment key={task.card_id || index}>
+
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'green'} />
+                        </div>
+                        <Dropara onDrop={() => onDrop(DONE2, index + 1)} />
+                      </React.Fragment>
+
                     ))
                   }
                 </div>
@@ -706,7 +835,7 @@ const closebtn = ()=>{
           </div>
         </div>
       </div>
-   
+
 
     </>
 
