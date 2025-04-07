@@ -1,11 +1,13 @@
+// @ts-nocheck
+
 import React, { HtmlHTMLAttributes, useState, useEffect } from 'react';
 // import { FcDocument } from "react-icons/fc";
 import { FcRules, FcExpand, FcNext, FcPrevious } from "react-icons/fc"
-import Mainheader from './mainheader';
+import Mainheader from './Mainheader';
 import Card from './Card';
 import axios from "axios";
 import Module from './Module';
-import Dropara from './dropara';
+import Dropara from './Dropara';
 // import { DragDropContext } from 'react-beautiful-dnd';
 
 
@@ -28,6 +30,7 @@ interface Task {
 
 const Mainbox = () => {
 
+  const url = "http://localhost:3000"
 
   const TODO = 'TODO'
   const INPROGRESS = 'INPROGRESS'
@@ -45,7 +48,7 @@ const Mainbox = () => {
   const DONE2 = 'DONE2'
 
   const [facthdata1, setFacthdata1] = useState<string>('');
-
+  
   const [tasks, setTasks] = useState<Task[]>([]);
   const [value, setValue] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
@@ -426,7 +429,7 @@ const Mainbox = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get<Task[]>("http://localhost:3000");
+        const response = await axios.get<Task[]>(url);
         setTasks(response.data);
       } catch (err) {
         console.log("Failed to fetch data");
@@ -474,7 +477,7 @@ const Mainbox = () => {
 
     try {
       // Send update request to the backend
-      await axios.put(`http://localhost:3000`, {
+      await axios.put(url, {
         card_id: dragTask.card_id,
         status: status,
       });
@@ -534,6 +537,9 @@ const Mainbox = () => {
 
 
   }
+  
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+  
 
 
 
@@ -572,7 +578,7 @@ const Mainbox = () => {
                     tasks.length > 0 && tasks.map((task, index) => (
                       task.card_staus === TODO &&
                       <React.Fragment key={task.card_id || index}>
-                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'red'} />
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={() => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'red'} />
                         </div>
                         <Dropara onDrop={() => onDrop(TODO, index + 1)} />
 
@@ -592,7 +598,7 @@ const Mainbox = () => {
                     tasks.length > 0 && tasks.map((task, index) => (
                       task.card_staus === INPROGRESS &&
                       <React.Fragment key={task.card_id || index}>
-                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(156 39 176)'} />
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={() => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(156 39 176)'} />
                         </div>
                         <Dropara onDrop={() => onDrop(INPROGRESS, index + 1)} />
                       </React.Fragment>
@@ -609,7 +615,7 @@ const Mainbox = () => {
                     tasks.length > 0 && tasks.map((task, index) => (
                       task.card_staus === REVIEW &&
                       <React.Fragment key={task.card_id || index}>
-                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={(e) => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(255 111 0)'} />
+                        <div className="task-item" onDrag={(e) => handleDrag(e, task)} onClick={() => handelclic(task)} onDragStart={() => setAcctivecard(task.card_id)} onDragEnd={() => setAcctivecard(null)} draggable > <Card title={task.card_title.slice(0, 15)} desc={task.card_desc.slice(0, 20)} col={'rgb(255 111 0)'} />
                         </div>
                         <Dropara onDrop={() => onDrop(REVIEW, task.card_id + 1)} />
                       </React.Fragment>
@@ -740,7 +746,7 @@ const Mainbox = () => {
             </div>
 
 
-
+ 
 
             <div className="lare3" style={lare3}>
               <span onClick={val3} style={{

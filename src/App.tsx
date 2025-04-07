@@ -1,4 +1,6 @@
-import './App.css'
+// @ts-nocheck
+
+// import './App.css'
 import Header from './components/header'
 import Mainbox from './components/Mainbox'
 

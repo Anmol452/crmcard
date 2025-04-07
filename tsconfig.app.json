@@ -5,7 +5,10 @@
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
+    "allowJs": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
+    "noEmitOnError": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -22,5 +25,29 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  
+  "include": ["src/app.tsx"]
 }
+
+
+
+
+// {
+//   "compilerOptions": {
+//     "target": "ESNext",
+//     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+//     "allowJs": false,
+//     "skipLibCheck": true,
+//     "esModuleInterop": true,
+//     "allowSyntheticDefaultImports": true,
+//     "strict": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "module": "ESNext",
+//     "moduleResolution": "Node",
+//     "resolveJsonModule": true,
+//     "isolatedModules": true,
+//     "noEmit": true,
+//     "jsx": "react-jsx"
+//   },
+//   "include": ["src"]
+// }

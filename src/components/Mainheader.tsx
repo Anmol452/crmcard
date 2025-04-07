@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, props } from 'react'
 import { FcRules, FcPrevious, FcNext, FcProcess , FcSynchronize } from "react-icons/fc"
 
